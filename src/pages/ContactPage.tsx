@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, Mail, Phone, MapPin, Send, CheckCircle as CheckCircleIcon, ChevronDown, FileText, TrendingUp, Users, Truck, ShieldCheck, Clock } from 'lucide-react'; 
-import axios from 'axios';
+import { Menu, X, Mail, Phone, MapPin, Send, CheckCircle as CheckCircleIcon, ChevronDown } from 'lucide-react'; 
 
 // navLinksData is used by the new navbar structure
 const navLinksData = [
@@ -109,8 +108,7 @@ const ContactPage: React.FC = () => {
       return;
     }
 
-    // --- FIX: The backend API call is temporarily disabled ---
-    // This section is commented out to allow the frontend to be deployed without a backend.
+    // --- The backend API call is temporarily disabled for frontend-only deployment ---
     /*
     try {
       const { hostname, protocol } = window.location;
@@ -153,7 +151,6 @@ const ContactPage: React.FC = () => {
         setFormData({ user_name: '', user_company: '', user_email: '', user_phone: '', message: '' });
         setIsLoading(false);
     }, 1000); // Simulate network delay
-    // --- END OF FIX ---
   };
 
   useEffect(() => {
@@ -175,7 +172,7 @@ const ContactPage: React.FC = () => {
   const contactInfoData: ContactItem[] = [
     { icon: <Phone />, title: 'WhatsApp/Call', details: ['+91 9895501632'], actions: [{ text: 'Call Us', href: 'tel:+919895501632' },{ text: 'WhatsApp Us', href: 'https://wa.me/919895501632?text=Hello%20RR%20Business%20Group!' },],},
     { icon: <Mail />, title: 'Email Us', details: ['info@rrbusinessgroup.com'], action: { text: 'Send an Email', href: 'mailto:info@rrbusinessgroup.com' },},
-    { icon: <MapPin/>, title: 'Our Location', details: ['RR Business Group, Valakom PO, Kottarakkara, Kollam, Kerala, India - 691532'], action: { text: 'View on Google Maps', href: 'https://maps.google.com/?q=RR+Business+Group,Valakom+PO,Kottarakkara,Kollam,Kerala,India,691532' },},
+    { icon: <MapPin/>, title: 'Our Location', details: ['RR Business Group, Valakom PO, Kottarakkara, Kollam, Kerala, India - 691532'], action: { text: 'View on Google Maps', href: 'https://maps.app.goo.gl/example' },},
   ];
   const officesData = [
     { city: 'Dubai', country: 'United Arab Emirates', address: 'Al Qusais Industrial Area 3, Dubai', phone: '+971 55 598 5347', email: 'info@rrbusinessgroup.com', image: '/dubai.jpg' },
@@ -228,7 +225,7 @@ const ContactPage: React.FC = () => {
                 }`}
               >
                 {link.name}
-              </a >
+              </Link> 
             ))}
           </nav>
           <button
