@@ -59,6 +59,9 @@ const ContactForm: React.FC = () => {
       return;
     }
 
+    // --- FIX: The backend API call is temporarily disabled ---
+    // This section is commented out to allow the frontend to be deployed without a backend.
+    /*
     try {
       const { hostname, protocol } = window.location;
       const API_BASE_URL = import.meta.env.MODE === 'development' 
@@ -88,15 +91,25 @@ const ContactForm: React.FC = () => {
       setIsLoading(false);
       // The useEffect below will handle resetting animatePlane after the animation
     }
+    */
+
+    // --- TEMPORARY FIX: Simulate a successful form submission ---
+    console.log("Form submitted (backend call disabled):", formData);
+    setTimeout(() => {
+        setSubmitted(true);
+        setFormData({ 
+          user_name: '', user_company: '', user_email: '', user_phone: '', message: ''
+        });
+        setIsLoading(false);
+    }, 1000); // Simulate network delay
+    // --- END OF FIX ---
   };
   
   useEffect(() => {
-    // This effect ensures animatePlane is reset after the animation has had time to complete,
-    // but only if we are no longer in the loading state (i.e., submission finished or failed).
     if (animatePlane && !isLoading) {
       const timer = setTimeout(() => {
         setAnimatePlane(false);
-      }, 1000); // Animation duration is 1s
+      }, 1000); 
       return () => clearTimeout(timer);
     }
   }, [animatePlane, isLoading]);
@@ -122,15 +135,15 @@ const ContactForm: React.FC = () => {
       icon: <MapPin className="h-6 w-6 text-[#2563EB]" />,
       title: 'Location',
       details: ['RR Business Group, Valakom, 691532, India'],
-      action: { text: 'View on Map', href: 'https://maps.google.com/?q=RR+Business+Group,Valakom,691532,India' }, // Improved maps link
+      action: { text: 'View on Map', href: 'https://maps.google.com/?q=RR+Business+Group,Valakom,691532,India' }, 
     },
   ];
 
-  let buttonClass = "inline-flex items-center justify-center px-6 py-3 text-white font-heading rounded-md w-full transition-all duration-300 ease-in-out relative overflow-hidden"; // Added relative and overflow-hidden
+  let buttonClass = "inline-flex items-center justify-center px-6 py-3 text-white font-heading rounded-md w-full transition-all duration-300 ease-in-out relative overflow-hidden";
   if (submitted) {
     buttonClass += " bg-green-500 hover:bg-green-600";
   } else if (isLoading) {
-    buttonClass += " bg-[#2563EB] opacity-85 cursor-not-allowed"; // Slightly less opacity for loading
+    buttonClass += " bg-[#2563EB] opacity-85 cursor-not-allowed";
   } else {
     buttonClass += " bg-[#2563EB] hover:bg-[#1E40AF]";
   }
@@ -212,7 +225,6 @@ const ContactForm: React.FC = () => {
                 ) : isLoading ? (
                   <>
                     <span className="mr-2">Sending...</span>
-                    {/* Wrapper span for the Send icon animation */}
                     <span className={animatePlane ? 'animate-fly-off-wrapper' : 'inline-block'}>
                       <Send size={18} />
                     </span>
