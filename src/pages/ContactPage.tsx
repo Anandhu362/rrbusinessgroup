@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, Mail, Phone, MapPin, Send, CheckCircle as CheckCircleIcon, ChevronDown, FileText, TrendingUp, Users, Truck, ShieldCheck, Clock } from 'lucide-react'; // Added missing icons from AboutPage nav structure if needed, though navLinks don't use them directly.
+import { Menu, X, Mail, Phone, MapPin, Send, CheckCircle as CheckCircleIcon, ChevronDown, FileText, TrendingUp, Users, Truck, ShieldCheck, Clock } from 'lucide-react'; 
 import axios from 'axios';
 
 // navLinksData is used by the new navbar structure
@@ -12,8 +12,6 @@ const navLinksData = [
   { name: 'Management', path: '/management' },
   { name: 'Contact', path: '/contact' },
 ];
-
-// NavbarComponent is removed as its logic is now integrated directly below
 
 interface ContactAction { text: string; href: string; }
 interface ContactItem { icon: React.ReactNode; title: string; details: string[]; actions?: ContactAction[]; action?: ContactAction; }
@@ -34,7 +32,6 @@ const useArrayRef = () => {
 const ContactPage: React.FC = () => {
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  // toggleMobileMenu is now toggleMenu to match AboutPage's internal naming for the button
   const toggleMenu = () => setMobileMenuOpen(!mobileMenuOpen); 
   const [isPageScrolled, setIsPageScrolled] = useState(false);
 
@@ -45,7 +42,7 @@ const ContactPage: React.FC = () => {
 
   useEffect(() => {
     const handlePageScroll = () => {
-      const scrolled = window.scrollY > 50; // Standard scroll threshold from AboutPage
+      const scrolled = window.scrollY > 50;
       if (isPageScrolled !== scrolled) {
         setIsPageScrolled(scrolled);
       }
@@ -112,6 +109,9 @@ const ContactPage: React.FC = () => {
       return;
     }
 
+    // --- FIX: The backend API call is temporarily disabled ---
+    // This section is commented out to allow the frontend to be deployed without a backend.
+    /*
     try {
       const { hostname, protocol } = window.location;
       const isDevelopment = typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.MODE === 'development';
@@ -144,6 +144,16 @@ const ContactPage: React.FC = () => {
     } finally {
       setIsLoading(false);
     }
+    */
+
+    // --- TEMPORARY FIX: Simulate a successful form submission ---
+    console.log("Form submitted (backend call disabled):", formData);
+    setTimeout(() => {
+        setFormSubmitted(true);
+        setFormData({ user_name: '', user_company: '', user_email: '', user_phone: '', message: '' });
+        setIsLoading(false);
+    }, 1000); // Simulate network delay
+    // --- END OF FIX ---
   };
 
   useEffect(() => {
@@ -196,57 +206,53 @@ const ContactPage: React.FC = () => {
 
 
   return (
-    <div className="pt-0 bg-[#F8FAFC] font-sans"> {/* Removed font-sans from header, apply globally if needed */}
-      {/* Navbar structure from AboutPage, adapted for ContactPage state/props */}
+    <div className="pt-0 bg-[#F8FAFC] font-sans"> 
       <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isPageScrolled ? 'bg-[#2C3E50]/90 backdrop-blur-md shadow-lg' : 'bg-transparent'}`}>
-        {/* Inner container with AboutPage's padding and max-width */}
         <div className="flex items-center justify-between px-4 md:px-6 py-4 max-w-screen-xl mx-auto">
           <Link to="/" className="flex items-center space-x-2 hover:opacity-90 transition-opacity">
             <img
               src="/logo.JPG"
-              alt="RR Business Group Logo" // Changed alt to be more descriptive
-              className="h-12 w-12 object-contain" // Standard logo size from AboutPage
+              alt="RR Business Group Logo" 
+              className="h-12 w-12 object-contain" 
               loading="lazy"
             />
             <span className="text-white font-bold text-xl">RR BUSINESS GROUP</span>
           </Link>
-          <nav className="hidden md:flex items-center space-x-8"> {/* space-x-8 from AboutPage */}
-            {navLinksData.map((link) => ( // Using navLinksData from ContactPage
+          <nav className="hidden md:flex items-center space-x-8"> 
+            {navLinksData.map((link) => ( 
               <Link
                 key={link.name}
                 to={link.path}
                 className={`text-white font-medium relative hover:text-sky-400 after:content-[''] after:absolute after:bottom-[-4px] after:left-0 after:h-[2px] after:bg-sky-400 after:transition-all after:duration-300 ${
-                  location.pathname === link.path ? 'after:w-full !text-sky-400' : 'after:w-0 hover:after:w-full' // Active link style: underline + sky blue text
+                  location.pathname === link.path ? 'after:w-full !text-sky-400' : 'after:w-0 hover:after:w-full'
                 }`}
               >
                 {link.name}
-              </Link>
+              </a >
             ))}
           </nav>
           <button
-            onClick={toggleMenu} // Using ContactPage's toggleMenu
-            className="md:hidden text-white focus:outline-none p-1 hover:opacity-80 transition-opacity" // Simplified mobile button, added padding
+            onClick={toggleMenu} 
+            className="md:hidden text-white focus:outline-none p-1 hover:opacity-80 transition-opacity"
             aria-label={mobileMenuOpen ? "Close navigation menu" : "Open navigation menu"}
             aria-expanded={mobileMenuOpen}
-            aria-controls="mobile-menu-main" // Changed ID for clarity
+            aria-controls="mobile-menu-main" 
           >
-            {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />} {/* Icon size from AboutPage */}
+            {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />} 
           </button>
         </div>
-        {/* Mobile menu structure from AboutPage */}
         {mobileMenuOpen && (
           <div 
-            id="mobile-menu-main" // Matches aria-controls
-            className="md:hidden bg-[#2C3E50]/95 text-white px-4 pb-4 space-y-3 shadow-lg animate-fadeIn" // Added space-y-3 for item spacing
-            // Removed fixed positioning, top, height, transform, overflow-y as this menu is now part of the header flow
+            id="mobile-menu-main"
+            className="md:hidden bg-[#2C3E50]/95 text-white px-4 pb-4 space-y-3 shadow-lg animate-fadeIn"
           >
-            {navLinksData.map((link) => ( // Using navLinksData from ContactPage
+            {navLinksData.map((link) => ( 
               <Link
                 key={link.name}
                 to={link.path}
-                onClick={() => setMobileMenuOpen(false)} // Using ContactPage's setMobileMenuOpen
-                className={`block py-2.5 px-3 text-lg font-medium transition-all duration-200 rounded-md ${ // Adjusted padding and text size for consistency
-                  location.pathname === link.path ? 'text-sky-300 bg-white/5 scale-105' : 'hover:text-sky-300 hover:bg-white/10 hover:pl-5' // Slightly adjusted active/hover
+                onClick={() => setMobileMenuOpen(false)}
+                className={`block py-2.5 px-3 text-lg font-medium transition-all duration-200 rounded-md ${ 
+                  location.pathname === link.path ? 'text-sky-300 bg-white/5 scale-105' : 'hover:text-sky-300 hover:bg-white/10 hover:pl-5'
                 }`}
               >
                 {link.name}
@@ -256,14 +262,13 @@ const ContactPage: React.FC = () => {
         )}
       </header>
 
-      {/* Hero Section - Ensure pt-16/pt-20 on content div is enough to clear fixed header */}
       <section className="relative h-[480px] md:h-[520px] text-white overflow-hidden">
         <div ref={heroImageRef} className="absolute inset-0 overflow-hidden rounded-b-[60px] will-change-transform">
           <div className="w-full h-full bg-cover bg-center" style={{ backgroundImage: "url('/contact.jpg')", backgroundPosition: 'center 20%', backgroundAttachment: 'fixed' }}>
             <div className="absolute inset-0 bg-gradient-to-br from-[#1A2533]/70 via-[#2C3E50]/50 to-[#1A2533]/70 backdrop-brightness-60"></div>
           </div>
         </div>
-        <div className="relative z-20 container mx-auto px-4 md:px-6 flex items-center h-full pt-20 md:pt-24"> {/* Increased top padding for hero content */}
+        <div className="relative z-20 container mx-auto px-4 md:px-6 flex items-center h-full pt-20 md:pt-24">
           <div ref={heroTextRef} className="max-w-3xl" style={{willChange: 'transform, opacity'}}>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 drop-shadow-xl animate-fadeInUp" style={{animationDelay: '0.1s'}}>Get In Touch</h1>
             <p className="text-xl md:text-2xl text-gray-100 mb-4 leading-relaxed drop-shadow-lg animate-fadeInUp" style={{animationDelay: '0.3s'}}>
@@ -276,7 +281,6 @@ const ContactPage: React.FC = () => {
         </div>
       </section>
 
-      {/* Contact Information and Form Section */}
       <section className="py-16 md:py-20 bg-[#F8FAFC] overflow-hidden">
         <div className="container mx-auto px-4 md:px-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start">
@@ -303,7 +307,7 @@ const ContactPage: React.FC = () => {
                           ))}
                         </div>
                       ) : ( info.action && (
-                          <a href={info.action.href} className="mt-3 inline-block text-sm font-semibold text-blue-600 hover:text-blue-700 hover:underline transition-colors" target="_blank" rel="noopener noreferrer">{info.action.text}</a>
+                          <a href={info.action.href} className="mt-3 inline-block text-sm font-semibold text-blue-600 hover:text-blue-700 hover:underline transition-colors" target="_blank" rel="noopener noreferrer">{action.text}</a>
                         )
                       )}
                     </div>
