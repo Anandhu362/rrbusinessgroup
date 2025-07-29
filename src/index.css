@@ -1,0 +1,288 @@
+/* Ensure this is the beginning of your main CSS file (e.g., index.css or global.css) */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ===== Base Layer ===== */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply text-gray-900 antialiased; /* Default text color */
+    font-family: 'Inter', sans-serif; /* Ensure Inter is properly linked */
+  }
+}
+
+/* ===== Custom Animation Classes for Scroll Effects ===== */
+/* Initial state for general sections */
+.section-base-animation {
+  opacity: 0;
+  transform: translateY(20px); /* Initial slight upward offset */
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  will-change: opacity, transform;
+}
+
+/* Initial state for the hero section */
+.hero-base-animation {
+  opacity: 0;
+  transform: translateY(20px); /* Initial slight upward offset */
+  /* Custom transition for hero: slightly longer duration and a small delay */
+  transition: opacity 0.7s ease-out 0.2s, transform 0.7s ease-out 0.2s;
+  will-change: opacity, transform;
+}
+
+/* Common visible state triggered by IntersectionObserver adding 'is-visible' class */
+.section-base-animation.is-visible,
+.hero-base-animation.is-visible {
+  opacity: 1;
+  transform: translateY(0); /* Moves to final position */
+}
+
+
+/* ===== Utility Classes ===== */
+@layer utilities {
+  /* Animation Delays */
+  .animation-delay-300 {
+    animation-delay: 300ms;
+  }
+
+  .animation-delay-600 {
+    animation-delay: 600ms;
+  }
+
+  /* Fade In (variant 1 - 20px lift) */
+  .animate-fade-in {
+    animation: fadeIn 1s ease-in-out forwards; /* Uses 'fadeIn' keyframes */
+  }
+
+  /* Fade In Up (variant 2 - 30px lift, opacity set initially) */
+  .animate-fadeInUp {
+    opacity: 0; /* Initially hidden, animation brings it to opacity 1 */
+    animation: fadeInUp 0.7s ease-out forwards; /* Uses 'fadeInUp' keyframes */
+  }
+
+  /* Floating Dot (Particles) */
+  .floating-dot {
+    @apply absolute rounded-full bg-slate-300; /* Consider a lighter or theme-based color */
+    width: 6px;
+    height: 6px;
+    animation: float 6s ease-in-out infinite alternate;
+  }
+
+  /* Radial Glow Animation */
+  .animate-pulse-slow {
+    animation: pulseSlow 8s ease-in-out infinite;
+  }
+
+  /* Line Clamp Utility (Works in WebKit-based browsers) */
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+/* ===== Scroll Animation Helper Styles (for Intersection Observer - Alternative/General) ===== */
+/* This is also in your CSS. HomePage.tsx now uses the more specific hero/section-base-animation classes. */
+/* You can keep this for other uses or if you switch back. */
+.initial-hidden-state {
+  opacity: 0;
+  transform: translateY(30px); /* Default lift amount */
+  /* Default transition for elements animated by Intersection Observer */
+  transition: opacity 0.7s ease-out 0s, transform 0.7s ease-out 0s;
+  will-change: opacity, transform; /* Hint for browser optimization */
+}
+
+.initial-hidden-state.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Specific transition for staggered cards if needed, applied alongside .is-visible */
+.initial-hidden-state.is-visible.stagger-card-transition {
+    transition: opacity 0.5s ease-out, transform 0.5s ease-out, box-shadow 0.3s ease-out, border-color 0.3s ease-out;
+}
+
+/* ===== Carousel Specific Styles (e.g., for QualityAssurance Page using Slick Slider) ===== */
+.quality-carousel-container {
+  height: 100%;
+  width: 100%;
+  position: relative;
+}
+
+.quality-carousel-container .slick-slider,
+.quality-carousel-container .slick-list,
+.quality-carousel-container .slick-track,
+.quality-carousel-container .slick-slide,
+.quality-carousel-container .slick-slide > div {
+  height: 100%;
+  outline: none; /* Removes focus outline from slides */
+}
+
+.quality-carousel-container .slick-slide img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.custom-slick-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(0, 0, 0, 0.35);
+  border-radius: 50%;
+  width: 44px;
+  height: 44px;
+  display: flex !important; /* Important to override slick's default display */
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 20;
+  transition: background-color 0.2s ease-in-out, opacity 0.2s ease-in-out;
+  border: none;
+  padding: 0;
+  opacity: 0.8;
+}
+.custom-slick-arrow:hover {
+  background-color: rgba(0, 0, 0, 0.6);
+  opacity: 1;
+}
+.custom-slick-arrow.slick-disabled {
+  opacity: 0.2;
+  cursor: default;
+}
+/* Remove default Slick arrow characters if you're using custom icons (e.g., Lucide) inside */
+.custom-slick-arrow.slick-prev::before,
+.custom-slick-arrow.slick-next::before {
+  content: '' !important;
+}
+.custom-slick-prev { left: 12px; }
+.custom-slick-next { right: 12px; }
+
+.quality-carousel-container .slick-dots {
+  bottom: 12px;
+  z-index: 15;
+}
+.quality-carousel-container .slick-dots li button:before {
+  font-size: 10px;
+  color: white;
+  opacity: 0.6;
+  transition: opacity 0.2s ease-in-out, color 0.2s ease-in-out; /* Added color transition */
+}
+.quality-carousel-container .slick-dots li.slick-active button:before {
+  opacity: 1;
+  color: white; /* Or a theme color like var(--primary-light) */
+}
+
+/* Ensure active slide is visually on top if there are overlaps during transitions */
+.quality-carousel-container .slick-slide { position: relative; }
+.quality-carousel-container .slick-slide.slick-active { z-index: 10; }
+.quality-carousel-container .slick-slide:not(.slick-active) { z-index: 9; }
+
+
+/* ===== Contact Page Form Button Send Icon Animation ===== */
+.animate-fly-off-wrapper {
+  display: inline-block; 
+  animation: flyAndFade 1s forwards; /* Uses 'flyAndFade' keyframes */
+  will-change: transform, opacity;
+}
+
+/* Ensure disabled green success button remains fully opaque */
+button:disabled.bg-green-500 { /* Be specific to avoid unintended overrides */
+  opacity: 1 !important;
+  cursor: default !important;
+}
+
+/* ===== Footer Newsletter Button Animation Styles (Retained) ===== */
+.animate-plane-takeoff { 
+  display: inline-block;
+  animation: planeTakeOff 1s cubic-bezier(0.5, -0.25, 0.75, 1.25) forwards;
+  transform-origin: center;
+}
+.animate-bell-shake { 
+  display: inline-block;
+  animation: bellShake 0.6s ease-in-out 3; /* plays 3 times */
+  transform-origin: top center;
+}
+
+/* ===== Component-Specific Animations (e.g., Products Page - Retained) ===== */
+.kenburns-slide {
+  animation: kenburns-top-left 15s ease-in-out infinite alternate;
+}
+.animate-modalEnter {
+  animation: modalEnter 0.3s ease-out forwards;
+}
+
+
+/* ===== Keyframes ===== */
+/* Used by .animate-fade-in utility */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Used by .animate-fadeInUp utility */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Used by .floating-dot utility */
+@keyframes float {
+  0% { transform: translateY(0); opacity: 0.6; }
+  100% { transform: translateY(-20px); opacity: 0.2; }
+}
+
+/* Used by .animate-pulse-slow utility */
+@keyframes pulseSlow {
+  0%, 100% { opacity: 0.5; transform: scale(1); }
+  50% { opacity: 0.7; transform: scale(1.05); }
+}
+
+/* Used by .animate-fly-off-wrapper (Contact Page Send Icon) */
+@keyframes flyAndFade { 
+  0% { transform: translateY(0) rotate(0deg) scale(1); opacity: 1; }
+  20% { transform: translateY(-10px) rotate(-10deg) scale(1.1); opacity: 1; } 
+  100% { transform: translate(80px, -80px) rotate(45deg) scale(0.2); opacity: 0; } 
+}
+
+
+/* Keyframes for Footer Newsletter Button (Retained) */
+@keyframes planeTakeOff {
+  0% { transform: translate(0, 0) rotate(0deg) scale(1); opacity: 1; }
+  20% { transform: translate(-2px, -6px) rotate(-15deg) scale(1.1); opacity: 1; }
+  100% { transform: translate(50px, -50px) rotate(45deg) scale(0.1); opacity: 0; }
+}
+
+@keyframes bellShake {
+  0%, 100% { transform: rotate(0deg) scale(1); }
+  10%, 30%, 50%, 70%, 90% { transform: rotate(12deg) scale(1.1); }
+  20%, 40%, 60%, 80% { transform: rotate(-12deg) scale(1.1); }
+}
+
+/* Keyframes for Products Page (Retained) */
+@keyframes kenburns-top-left {
+  0% { transform: scale(1) translate(0, 0); transform-origin: 0% 0%; }
+  100% { transform: scale(1.15) translate(-2%, -2%); transform-origin: 0% 0%; }
+}
+
+@keyframes modalEnter {
+  from { opacity: 0; transform: translateY(20px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* ===== CSS Variables (from your tailwind.config.js theme) ===== */
+:root {
+  --primary: #C0392B;
+  --primary-dark: #A93226;
+  --primary-light: #E74C3C;
+  --off-white: #F9F9F9;
+  /* You can add font families here too if needed outside Tailwind context */
+  /* --font-sans: 'Inter', sans-serif; */
+  /* --font-heading: 'Poppins', sans-serif; */
+}
